@@ -96,4 +96,4 @@ jobs:
         if: steps.changed-files.outputs.ruby == 'true'
         run: |
           git fetch origin ${{ github.base_ref }}  # Fetch the base branch
-          git diff --name-only --diff-filter=AMR origin/${{ github.base_ref }}..HEAD | grep '\.rb$' | xargs bundle exec rubocop
+          git diff --name-only --diff-filter=AMR origin/${{ github.base_ref }}..HEAD | grep '\.rb$' | xargs rubocop
