@@ -349,3 +349,4 @@ RSpec/MultipleExpectations:
 
 RSpec/NamedSubject:
   Enabled: false
+  
