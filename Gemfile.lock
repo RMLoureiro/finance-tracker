@@ -76,6 +76,7 @@ GEM
       public_suffix (>= 2.0.2, < 7.0)
     ast (2.4.3)
     base64 (0.3.0)
+    bcrypt (3.1.20)
     bcrypt_pbkdf (1.1.1)
     bcrypt_pbkdf (1.1.1-arm64-darwin)
     bcrypt_pbkdf (1.1.1-x86_64-darwin)
@@ -87,7 +88,6 @@ GEM
     brakeman (7.0.2)
       racc
     builder (3.3.0)
-    byebug (12.0.0)
     capybara (3.40.0)
       addressable
       matrix
@@ -97,15 +97,10 @@ GEM
       rack-test (>= 0.6.3)
       regexp_parser (>= 1.5, < 3.0)
       xpath (~> 3.2)
+    coderay (1.1.3)
     concurrent-ruby (1.3.5)
     connection_pool (2.5.3)
     crass (1.0.6)
-    database_cleaner (2.1.0)
-      database_cleaner-active_record (>= 2, < 3)
-    database_cleaner-active_record (2.2.1)
-      activerecord (>= 5.a)
-      database_cleaner-core (~> 2.0.0)
-    database_cleaner-core (2.0.1)
     date (3.4.1)
     debug (1.11.0)
       irb (~> 1.10)
@@ -119,8 +114,11 @@ GEM
     erubi (1.13.1)
     et-orbi (1.2.11)
       tzinfo
-    factory_bot (6.5.1)
+    factory_bot (6.5.4)
       activesupport (>= 6.1.0)
+    factory_bot_rails (6.5.0)
+      factory_bot (~> 6.5)
+      railties (>= 6.1.0)
     fugit (1.11.1)
       et-orbi (~> 1, >= 1.2.11)
       raabro (~> 1.4)
@@ -165,6 +163,7 @@ GEM
       net-smtp
     marcel (1.0.4)
     matrix (0.4.3)
+    method_source (1.1.0)
     mini_mime (1.1.5)
     minitest (5.25.5)
     msgpack (1.8.0)
@@ -214,6 +213,9 @@ GEM
       activesupport (>= 7.0.0)
       rack
       railties (>= 7.0.0)
+    pry (0.15.2)
+      coderay (~> 1.1)
+      method_source (~> 1.0)
     psych (5.2.6)
       date
       stringio
@@ -261,6 +263,8 @@ GEM
       zeitwerk (~> 2.6)
     rainbow (3.1.1)
     rake (13.3.0)
+    rbs (3.9.4)
+      logger
     rdoc (6.14.1)
       erb
       psych (>= 4.0.0)
@@ -305,6 +309,9 @@ GEM
     rubocop-factory_bot (2.27.1)
       lint_roller (~> 1.1)
       rubocop (~> 1.72, >= 1.72.1)
+    rubocop-packaging (0.6.0)
+      lint_roller (~> 1.1.0)
+      rubocop (>= 1.72.1, < 2.0)
     rubocop-performance (1.25.0)
       lint_roller (~> 1.1)
       rubocop (>= 1.75.0, < 2.0)
@@ -326,6 +333,17 @@ GEM
       lint_roller (~> 1.1)
       rubocop (~> 1.72, >= 1.72.1)
       rubocop-rspec (~> 3.5)
+    rubocop-shopify (2.17.1)
+      rubocop (~> 1.62)
+    rubocop-thread_safety (0.7.3)
+      lint_roller (~> 1.1)
+      rubocop (~> 1.72, >= 1.72.1)
+      rubocop-ast (>= 1.44.0, < 2.0)
+    ruby-lsp (0.24.2)
+      language_server-protocol (~> 3.17.0)
+      prism (>= 1.2, < 2.0)
+      rbs (>= 3, < 5)
+      sorbet-runtime (>= 0.5.10782)
     ruby-progressbar (1.13.0)
     rubyzip (2.4.1)
     securerandom (0.4.1)
@@ -359,6 +377,7 @@ GEM
       fugit (~> 1.11.0)
       railties (>= 7.1)
       thor (~> 1.3.1)
+    sorbet-runtime (0.5.12200)
     sshkit (1.24.0)
       base64
       logger
@@ -413,25 +432,33 @@ PLATFORMS
   x86_64-linux-musl
 
 DEPENDENCIES
+  bcrypt
   bootsnap
   brakeman
-  byebug
   capybara
-  database_cleaner
   debug
-  factory_bot
+  factory_bot_rails
   importmap-rails
   jbuilder
   kamal
   pg (~> 1.1)
   propshaft
+  pry
   puma (>= 5.0)
-  rails (~> 8.0.2)
+  rails (~> 8.0.1)
   rspec-rails
+  rubocop
   rubocop-capybara
   rubocop-factory_bot
+  rubocop-packaging
+  rubocop-performance
+  rubocop-rails
   rubocop-rails-omakase
+  rubocop-rspec
   rubocop-rspec_rails
+  rubocop-shopify
+  rubocop-thread_safety
+  ruby-lsp
   selenium-webdriver
   shoulda-matchers
   simplecov

@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem "rails", "~> 8.0.2"
+gem "rails", "~> 8.0.1"
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
 gem "propshaft"
 # Use postgresql as the database for Active Record
@@ -37,6 +37,18 @@ gem "kamal", require: false
 # Add HTTP asset caching/compression and X-Sendfile acceleration to Puma [https://github.com/basecamp/thruster/]
 gem "thruster", require: false
 
+gem "rubocop"
+gem "rubocop-rails"
+
+gem "ruby-lsp"
+gem "rubocop-packaging"
+gem "rubocop-performance"
+gem "rubocop-rspec"
+gem "rubocop-shopify"
+gem "rubocop-thread_safety"
+gem "pry"
+gem "bcrypt"
+
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
 
@@ -49,14 +61,11 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
-  gem "byebug", platform: :mri
-  gem "rspec-rails"
-  gem "factory_bot"
-  gem "capybara"
-  gem "database_cleaner"
   gem "rubocop-factory_bot"
   gem "rubocop-capybara"
   gem "rubocop-rspec_rails"
+  gem "rspec-rails"
+  gem "factory_bot_rails"
 end
 
 group :development do
@@ -66,7 +75,8 @@ end
 
 group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
+  gem "capybara"
   gem "selenium-webdriver"
-  gem "simplecov", require: false
   gem "shoulda-matchers"
+  gem "simplecov", require: false
 end
