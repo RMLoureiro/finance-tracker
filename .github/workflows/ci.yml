@@ -3,6 +3,7 @@ on: [pull_request]
 
 jobs:
   rspec-test:
+    permissions: write-all
     name: RSpec
     runs-on: ubuntu-latest
 
