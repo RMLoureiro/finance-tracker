@@ -61,39 +61,10 @@ jobs:
   rubocop:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v1
+      - name: RuboCop Linter
+        uses: andrewmcodes/rubocop-linter-action@v3.3.0
         with:
-          fetch-depth: 0  # Fetch all history for all branches and tags
-
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: "3.3.0" # Replace with your desired Ruby version
-          bundler-cache: true  # Automatically install and cache gems
-
-      - name: Install gems
-        run: bundle install --jobs 4 --retry 3
-
-      - name: Install RuboCop and extensions
-        run: |
-          gem install rubocop rubocop-rails rubocop-rspec rubocop-rspec_rails
-
-      - name: Verify RuboCop installation
-        run: |
-          which rubocop  # Check if RuboCop is installed and in PATH
-          rubocop --version  # Print RuboCop version to confirm installation
-
-      - name: Find changed files
-        id: changed-files
-        uses: dorny/paths-filter@v2
-        with:
-          filters: |
-            ruby:
-              - '**.rb'  # Only look for Ruby files
-
-      - name: Run RuboCop on changed files
-        if: steps.changed-files.outputs.ruby == 'true'
-        run: |
-          git fetch origin ${{ github.base_ref }}  # Fetch the base branch
-          git diff --name-only --diff-filter=AMR origin/${{ github.base_ref }}..HEAD | grep '\.rb$' | xargs bundle exec rubocop
+          action_config_path: ".github/config/rubocop_linter_action.yml" # Note: this is the default location
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
