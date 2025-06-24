@@ -1,101 +1,98 @@
-name: CI
-
-on:
-  pull_request:
-  push:
-    branches: [ main ]
+name: Rails CI/CD
+on: [pull_request]
 
 jobs:
-  scan_ruby:
+  rspec-test:
+    name: RSpec
     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: .ruby-version
-          bundler-cache: true
-
-      - name: Scan for common Rails security vulnerabilities using static analysis
-        run: bin/brakeman --no-pager
-
-  scan_js:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: .ruby-version
-          bundler-cache: true
-
-      - name: Scan for security vulnerabilities in JavaScript dependencies
-        run: bin/importmap audit
-
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: .ruby-version
-          bundler-cache: true
-
-      - name: Lint code for consistent style
-        run: bin/rubocop -f github
-
-  test:
-    runs-on: ubuntu-latest
-
+    # If you need DB like PostgreSQL, Redis then define service below.
+    # https://github.com/actions/example-services/tree/master/.github/workflows
     services:
       postgres:
-        image: postgres
+        image: postgres:14.18
         env:
           POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
+          POSTGRES_PASSWORD: ""
+          POSTGRES_DB: postgres
         ports:
           - 5432:5432
-        options: --health-cmd="pg_isready" --health-interval=10s --health-timeout=5s --health-retries=3
+        # needed because the postgres container does not provide a healthcheck
+        # tmpfs makes DB faster by using RAM
+        options: >-
+          --mount type=tmpfs,destination=/var/lib/postgresql/data
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
-      # redis:
-      #   image: redis
-      #   ports:
-      #     - 6379:6379
-      #   options: --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 5
-
+    env:
+      RAILS_ENV: test
+      GEMFILE_RUBY_VERSION: "3.3.0"
+      PGHOST: localhost
+      PGUSER: postgres
     steps:
-      - name: Install packages
-        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y build-essential git libpq-dev libyaml-dev pkg-config google-chrome-stable
-
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v3
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: .ruby-version
-          bundler-cache: true
-
+          # Not needed with a .ruby-version file
+          ruby-version: "3.3.0"
+          # runs 'bundle install' and caches installed gems automatically
+          bundler-cache: false
+      - name: Install gems
+        run: bundle install --jobs 4 --retry 3
+      - name: Create DB
+        run: |
+          bin/rails db:prepare
       - name: Run tests
-        env:
-          RAILS_ENV: test
-          DATABASE_URL: postgres://postgres:postgres@localhost:5432
-          # REDIS_URL: redis://localhost:6379/0
-        run: bin/rails db:test:prepare test test:system
+        run: |
+          bundler exec rspec spec/*
 
-      - name: Keep screenshots from failed system tests
-        uses: actions/upload-artifact@v4
-        if: failure()
+      # Code coverage
+      - uses: joshmfrankel/simplecov-check-action@main
         with:
-          name: screenshots
-          path: ${{ github.workspace }}/tmp/screenshots
-          if-no-files-found: ignore
+          minimum_suite_coverage: 90
+          minimum_file_coverage: 80
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+  rubocop:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Fetch all history for all branches and tags
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3.0" # Replace with your desired Ruby version
+          bundler-cache: true  # Automatically install and cache gems
+
+      - name: Install gems
+        run: bundle install --jobs 4 --retry 3
+
+      - name: Install RuboCop and extensions
+        run: |
+          gem install rubocop rubocop-rails rubocop-rspec rubocop-rspec_rails
+
+      - name: Verify RuboCop installation
+        run: |
+          which rubocop  # Check if RuboCop is installed and in PATH
+          rubocop --version  # Print RuboCop version to confirm installation
+
+      - name: Find changed files
+        id: changed-files
+        uses: dorny/paths-filter@v2
+        with:
+          filters: |
+            ruby:
+              - '**.rb'  # Only look for Ruby files
+
+      - name: Run RuboCop on changed files
+        if: steps.changed-files.outputs.ruby == 'true'
+        run: |
+          git fetch origin ${{ github.base_ref }}  # Fetch the base branch
+          git diff --name-only --diff-filter=AMR origin/${{ github.base_ref }}..HEAD | grep '\.rb$' | xargs bundle exec rubocop
