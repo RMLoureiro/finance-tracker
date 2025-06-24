@@ -54,6 +54,9 @@ group :development, :test do
   gem "factory_bot"
   gem "capybara"
   gem "database_cleaner"
+  gem "rubocop-factory_bot"
+  gem "rubocop-capybara"
+  gem "rubocop-rspec_rails"
 end
 
 group :development do
@@ -63,6 +66,7 @@ end
 
 group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
-  gem "capybara"
   gem "selenium-webdriver"
+  gem "simplecov", require: false
+  gem "shoulda-matchers"
 end
