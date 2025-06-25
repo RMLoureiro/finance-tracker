@@ -1,6 +1,7 @@
 AllCops:
   NewCops: enable
   SuggestExtensions: false
+  TargetRubyVersion: 3.3.0
   Exclude:
     - db/migrate/**/*
     - db/schema.rb
@@ -349,4 +350,3 @@ RSpec/MultipleExpectations:
 
 RSpec/NamedSubject:
   Enabled: false
-  
