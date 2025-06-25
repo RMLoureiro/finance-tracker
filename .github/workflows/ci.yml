@@ -86,7 +86,7 @@ jobs:
 
       - name: Find changed files
         id: changed-files
-        uses: dorny/paths-filter@v2
+        uses: dorny/paths-filter@v3
         with:
           filters: |
             app:
