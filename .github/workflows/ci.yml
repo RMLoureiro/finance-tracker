@@ -3,6 +3,7 @@ on: [pull_request]
 
 jobs:
   rspec-test:
+    permissions: write-all
     name: RSpec
     runs-on: ubuntu-latest
 
@@ -88,8 +89,10 @@ jobs:
         uses: dorny/paths-filter@v2
         with:
           filters: |
-            ruby:
-              - '**.rb'  # Only look for Ruby files
+            app:
+              - 'app/**.rb'  # Only look for files in app folder
+            spec:
+              - 'spec/**.rb'  # Only look for Ruby files
 
       - name: Run RuboCop on changed files
         if: steps.changed-files.outputs.ruby == 'true'
