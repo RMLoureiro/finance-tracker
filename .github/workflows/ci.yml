@@ -68,6 +68,8 @@ jobs:
           ruby-version: "3.3.0"
           # runs 'bundle install' and caches installed gems automatically
           bundler-cache: false
+      - name: Install gems
+        run: bundle install --jobs 4 --retry 3
       - uses: actions/checkout@v1
       - name: RuboCop Linter
         uses: andrewmcodes/rubocop-linter-action@v3.3.0

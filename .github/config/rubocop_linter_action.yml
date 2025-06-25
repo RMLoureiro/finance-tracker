@@ -15,8 +15,8 @@ versions:
   - rubocop
   - rubocop-rails
   - rubocop-minitest
-  - rubocop-performance: "1.5.1"
-  - rubocop-rspec: "1.37.0"
+  - rubocop-performance
+  - rubocop-rspec
 
 # Description: RuboCop configuration file path relative to the workspace.
 # Valid options: A valid file path inside of the workspace.
