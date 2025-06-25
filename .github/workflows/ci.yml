@@ -70,7 +70,7 @@ jobs:
           # runs 'bundle install' and caches installed gems automatically
           bundler-cache: false
       - name: RuboCop Linter
-        uses: andrewmcodes/rubocop-linter-action@v3.3.0
+        uses: andrewmcodes/rubocop-linter-action@master
         with:
           action_config_path: ".github/config/rubocop_linter_action.yml" # Note: this is the default location
         env:
