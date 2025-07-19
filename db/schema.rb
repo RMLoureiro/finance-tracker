@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_12_023517) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_19_161340) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -22,6 +22,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_12_023517) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_accounts_on_user_id"
+  end
+
+  create_table "budgets", force: :cascade do |t|
+    t.string "name"
+    t.float "amount"
+    t.date "start_date"
+    t.boolean "active", default: true
+    t.bigint "account_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_budgets_on_account_id"
   end
 
   create_table "transaction_types", force: :cascade do |t|
