@@ -32,3 +32,32 @@
 
 # Ignore master key for decrypting credentials and more.
 /config/master.key
+
+# Logs
+vue/logs
+vue/*.log
+vue/npm-debug.log*
+vue/yarn-debug.log*
+vue/yarn-error.log*
+vue/pnpm-debug.log*
+vue/lerna-debug.log*
+
+vue/node_modules
+vue/.DS_Store
+vue/dist
+vue/dist-ssr
+vue/coverage
+vue/*.local
+
+vue/cypress/videos/
+vue/cypress/screenshots/
+
+# Editor directories and files
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+vue/*.tsbuildinfo
