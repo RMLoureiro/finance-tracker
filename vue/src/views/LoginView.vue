@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import axios from 'axios'
 import { ref, nextTick } from 'vue'
-import { RouterView } from 'vue-router'
+import { RouterView, useRouter } from 'vue-router'
+import { API_BASE_URL } from '../apiConfig';
 const showLogin = ref(true)
 const loginEmail = ref('')
 const loginPassword = ref('')
@@ -11,6 +13,9 @@ const registerConfirm = ref('')
 const registerError = ref('')
 const registerErrorVisible = ref(false)
 
+const loginError = ref('')
+const loginErrorVisible = ref(false)
+
 async function showRegisterError(message: string) {
   registerError.value = message
   registerErrorVisible.value = true
@@ -20,12 +25,34 @@ async function showRegisterError(message: string) {
   }, 3500)
 }
 
-function handleLogin() {
-  // Add your login logic here
-  alert(`Logging in as ${loginEmail.value}`)
+async function showLoginError(message: string) {
+  loginError.value = message
+  loginErrorVisible.value = true
+  await nextTick()
+  setTimeout(() => {
+    loginErrorVisible.value = false
+  }, 3500)
 }
 
-function handleRegister() {
+async function handleLogin() {
+  loginError.value = ''
+  try {
+    const res = await axios.post(`${API_BASE_URL}/api/login`, {
+      username: loginEmail.value,
+      password: loginPassword.value
+    }, { withCredentials: true })
+    // On success, redirect or update state
+    window.location.href = '/'
+  } catch (e: any) {
+    if (e.response && e.response.data && e.response.data.error) {
+      showLoginError(e.response.data.error)
+    } else {
+      showLoginError('Login failed')
+    }
+  }
+}
+
+async function handleRegister() {
   const password = registerPassword.value
   const confirm = registerConfirm.value
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/
@@ -40,60 +67,85 @@ function handleRegister() {
     )
     return
   }
-  alert(`Registering ${registerEmail.value}`)
+  try {
+    const res = await axios.post(`${API_BASE_URL}/api/users`, {
+      user: {
+        username: registerEmail.value,
+        name: registerEmail.value,
+        password
+      }
+    }, { withCredentials: true })
+    // On success, switch to login view
+    showLogin.value = true
+  } catch (e: any) {
+    if (e.response && e.response.data && e.response.data.errors) {
+      showRegisterError(e.response.data.errors.join(', '))
+    } else {
+      showRegisterError('Registration failed')
+    }
+  }
 }
 </script>
 
 <template>
-  <main class="auth-container">
-    <div v-if="showLogin" class="auth-form">
-      <h2>Login</h2>
-      <form @submit.prevent="handleLogin">
-        <input v-model="loginEmail" type="email" placeholder="Email" required />
-        <input v-model="loginPassword" type="password" placeholder="Password" required />
-        <button type="submit">Login</button>
-      </form>
-      <p>
-        Don't have an account?
-        <a href="#" @click.prevent="showLogin = false">Create Account</a>
-      </p>
-    </div>
-    <div v-else class="auth-form">
-      <h2>Create Account</h2>
-      <form @submit.prevent="handleRegister">
-        <input v-model="registerEmail" type="email" placeholder="Email" required />
-        <input v-model="registerPassword" type="password" placeholder="Password" required />
-        <input v-model="registerConfirm" type="password" placeholder="Confirm Password" required />
-        <button type="submit">Register</button>
-        <transition name="fade">
-          <div v-if="registerErrorVisible" class="tooltip-error">
-            {{ registerError }}
-          </div>
-        </transition>
-      </form>
-      <p>
-        Already have an account?
-        <a href="#" @click.prevent="showLogin = true">Login</a>
-      </p>
-    </div>
-  </main>
-
-  <RouterView />
+  <div class="auth-outer">
+    <main class="auth-container">
+      <div v-if="showLogin" class="auth-form">
+        <h2>Login</h2>
+        <form @submit.prevent="handleLogin">
+          <input v-model="loginEmail" type="email" placeholder="Email" required />
+          <input v-model="loginPassword" type="password" placeholder="Password" required />
+          <button type="submit">Login</button>
+          <transition name="fade">
+            <div v-if="loginErrorVisible" class="tooltip-error">
+              {{ loginError }}
+            </div>
+          </transition>
+        </form>
+        <p>
+          Don't have an account?
+          <a href="#" @click.prevent="showLogin = false">Create Account</a>
+        </p>
+      </div>
+      <div v-else class="auth-form">
+        <h2>Create Account</h2>
+        <form @submit.prevent="handleRegister">
+          <input v-model="registerEmail" type="email" placeholder="Email" required />
+          <input v-model="registerPassword" type="password" placeholder="Password" required />
+          <input v-model="registerConfirm" type="password" placeholder="Confirm Password" required />
+          <button type="submit">Register</button>
+          <transition name="fade">
+            <div v-if="registerErrorVisible" class="tooltip-error">
+              {{ registerError }}
+            </div>
+          </transition>
+        </form>
+        <p>
+          Already have an account?
+          <a href="#" @click.prevent="showLogin = true">Login</a>
+        </p>
+      </div>
+    </main>
+    <RouterView />
+  </div>
 </template>
 
 <style scoped>
+.auth-outer {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .auth-container {
   width: 400px;
   min-height: 420px;
-  margin: 3rem auto;
   padding: 2.5rem 2rem;
   background: #23272f;
   border-radius: 10px;
   box-shadow: 0 2px 16px rgba(0,0,0,0.28);
   color: #f3f3f3;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .auth-form {
@@ -164,7 +216,6 @@ function handleRegister() {
   right: 0;
   top: 100%;
   margin: 0 auto;
-  margin-top: 0.5rem;
   background: #ff3b3b;
   color: #fff;
   padding: 0.75rem 1rem;

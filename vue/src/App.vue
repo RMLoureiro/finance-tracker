@@ -32,8 +32,4 @@ import { RouterView } from 'vue-router'
 .banner-title {
   margin-left: 0;
 }
-
-body, #app {
-  padding-top: 4.5rem; /* Adjust if needed to prevent content underlap */
-  }
 </style>
