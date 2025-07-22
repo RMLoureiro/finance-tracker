@@ -308,8 +308,7 @@ Style/InlineComment:
   Enabled: false
 
 Layout/LineLength:
-  Description: 'Limit lines to 120 characters. (Default is 80)'
-  Max: 120
+  enabled: false
 
 Style/FrozenStringLiteralComment:
   Description: To help transition from Ruby 2.3.0 to Ruby 3.0.
@@ -352,4 +351,7 @@ RSpec/MultipleExpectations:
   Enabled: false
 
 RSpec/NamedSubject:
+  Enabled: false
+
+RSpec/ExampleLength:
   Enabled: false

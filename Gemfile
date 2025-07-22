@@ -48,9 +48,12 @@ gem "rubocop-shopify"
 gem "rubocop-thread_safety"
 gem "pry"
 gem "bcrypt"
+gem "rack-cors"
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
+
+gem "erb", "5.0.2"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
