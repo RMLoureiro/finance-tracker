@@ -4,7 +4,8 @@ FactoryBot.define do
   factory :account do
     name { "MyString" }
     balance { 1.5 }
-    type { 1 }
+    account_type { 1 }
     user { nil }
+    main { false }
   end
 end

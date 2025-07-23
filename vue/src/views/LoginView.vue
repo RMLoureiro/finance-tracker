@@ -3,6 +3,7 @@ import axios from 'axios'
 import { ref, nextTick } from 'vue'
 import { RouterView, useRouter } from 'vue-router'
 import { API_BASE_URL } from '../apiConfig';
+import { authHeaders } from '../apiConfig';
 const showLogin = ref(true)
 const loginEmail = ref('')
 const loginPassword = ref('')
@@ -40,8 +41,9 @@ async function handleLogin() {
     const res = await axios.post(`${API_BASE_URL}/api/login`, {
       username: loginEmail.value,
       password: loginPassword.value
-    }, { withCredentials: true })
-    // On success, redirect or update state
+    })
+    // Store JWT
+    localStorage.setItem('jwt', res.data.token)
     window.location.href = '/'
   } catch (e: any) {
     if (e.response && e.response.data && e.response.data.error) {
@@ -68,7 +70,7 @@ async function handleRegister() {
     return
   }
   try {
-    const res = await axios.post(`${API_BASE_URL}/api/users`, {
+    const res = await axios.post(`${API_BASE_URL}/users`, {
       user: {
         username: registerEmail.value,
         name: registerEmail.value,
@@ -84,6 +86,11 @@ async function handleRegister() {
       showRegisterError('Registration failed')
     }
   }
+}
+
+function logout() {
+  localStorage.removeItem('jwt')
+  window.location.href = '/login'
 }
 </script>
 

@@ -6,4 +6,5 @@ class User < ApplicationRecord
   validates :password, presence: true, confirmation: true, on: :create
 
   has_secure_password
+  has_many :accounts, dependent: :destroy
 end

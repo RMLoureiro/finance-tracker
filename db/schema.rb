@@ -10,17 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_19_161340) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_23_000000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
   create_table "accounts", force: :cascade do |t|
     t.string "name"
     t.float "balance"
-    t.integer "type"
+    t.integer "account_type"
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "main", default: false, null: false
     t.index ["user_id"], name: "index_accounts_on_user_id"
   end
 

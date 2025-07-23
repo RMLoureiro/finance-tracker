@@ -4,12 +4,17 @@ module Authentication
   extend ActiveSupport::Concern
 
   included do
-    protect_from_forgery with: :null_session
+    # No CSRF needed for JWT
     helper_method :current_user
   end
 
   def current_user
-    @current_user ||= User.find_by(id: session[:user_id]) if session[:user_id]
+    return @current_user if defined?(@current_user)
+
+    header = request.headers["Authorization"]
+    token = header.split.last if header
+    decoded = JsonWebToken.decode(token)
+    @current_user = decoded ? User.find_by(id: decoded[:user_id]) : nil
   end
 
   def require_login
