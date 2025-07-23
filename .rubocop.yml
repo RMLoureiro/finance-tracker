@@ -355,3 +355,6 @@ RSpec/NamedSubject:
 
 RSpec/ExampleLength:
   Enabled: false
+
+Metrics/MethodLength:
+  Enabled: false

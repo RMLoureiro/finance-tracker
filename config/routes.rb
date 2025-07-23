@@ -12,10 +12,13 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "posts#index"
 
+  get 'accounts/main', to: 'accounts#main'
+  resources :accounts, only: [:index, :create, :show]
+  post 'users', to: 'users#create'
+  get 'user', to: 'users#show'
+
   namespace :api, defaults: { format: :json } do
-    post 'users', to: '/users#create'
     post "login", to: "sessions#create"
     delete "logout", to: "sessions#destroy"
-    get "user", to: "/users#show"
   end
 end
