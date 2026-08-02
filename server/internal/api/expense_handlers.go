@@ -38,6 +38,10 @@ func (s *Server) handleListExpenses(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusBadRequest, "mês inválido (esperado YYYY-MM)")
 		return
 	}
+	if err := s.ensureExpected(r.Context(), month); err != nil {
+		writeError(w, http.StatusInternalServerError, "erro interno")
+		return
+	}
 	next := month.AddDate(0, 1, 0)
 
 	query := `SELECT ` + expenseCols + ` FROM expenses WHERE spent_on >= $1 AND spent_on < $2`

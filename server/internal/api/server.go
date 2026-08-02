@@ -56,6 +56,14 @@ func (s *Server) Handler() http.Handler {
 
 	mux.Handle("GET /api/months/{month}", s.requireAuth(s.handleMonthSummary))
 
+	mux.Handle("GET /api/recurring", s.requireAuth(s.handleListRecurring))
+	mux.Handle("POST /api/recurring", s.requireAuth(s.handleCreateRecurring))
+	mux.Handle("PUT /api/recurring/{id}", s.requireAuth(s.handleUpdateRecurring))
+	mux.Handle("DELETE /api/recurring/{id}", s.requireAuth(s.handleDeleteRecurring))
+
+	mux.Handle("GET /api/reports/monthly", s.requireAuth(s.handleMonthlyReport))
+	mux.Handle("GET /api/reports/annual", s.requireAuth(s.handleAnnualReport))
+
 	return mux
 }
 

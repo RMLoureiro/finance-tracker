@@ -49,6 +49,23 @@ func (c *client) do(method, path string, body any) (*http.Response, map[string]a
 	return resp, out
 }
 
+// doList é como do, mas para endpoints que devolvem um array JSON.
+func (c *client) doList(method, path string) (*http.Response, []any) {
+	c.t.Helper()
+	req, err := http.NewRequest(method, c.base+path, nil)
+	if err != nil {
+		c.t.Fatal(err)
+	}
+	resp, err := c.http.Do(req)
+	if err != nil {
+		c.t.Fatal(err)
+	}
+	defer resp.Body.Close()
+	var out []any
+	json.NewDecoder(resp.Body).Decode(&out)
+	return resp, out
+}
+
 func (c *client) mustStatus(resp *http.Response, want int, out map[string]any) {
 	c.t.Helper()
 	if resp.StatusCode != want {
