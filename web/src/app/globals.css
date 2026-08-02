@@ -342,6 +342,7 @@ a:focus-visible {
     position: sticky;
     top: 0;
     bottom: auto;
+    order: -1; /* no desktop a navegação passa para o topo */
     border-top: 0;
     border-bottom: 1px solid var(--line);
     justify-content: flex-start;

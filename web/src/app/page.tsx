@@ -203,7 +203,7 @@ export default function HomePage() {
         </div>
 
         <button className="btn fab" onClick={() => setSheet({ open: true, expense: null })}>
-          ＋ Despesa
+          + Despesa
         </button>
       </main>
 

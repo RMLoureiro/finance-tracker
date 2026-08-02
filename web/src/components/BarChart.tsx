@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { euros } from "@/lib/money";
 
 export interface BarDatum {
@@ -22,6 +22,14 @@ const PAD_BOTTOM = 24;
  */
 export default function BarChart({ data, color }: { data: BarDatum[]; color: string }) {
   const [focus, setFocus] = useState<number | null>(null);
+  const scroller = useRef<HTMLDivElement>(null);
+
+  // em ecrãs estreitos o gráfico faz scroll horizontal; começa no fim,
+  // onde estão os meses mais recentes
+  useEffect(() => {
+    const el = scroller.current;
+    if (el) el.scrollLeft = el.scrollWidth;
+  }, []);
 
   const max = Math.max(...data.map((d) => Math.max(d.value, d.target ?? 0)), 1);
   const innerH = H - PAD_TOP - PAD_BOTTOM;
@@ -31,7 +39,7 @@ export default function BarChart({ data, color }: { data: BarDatum[]; color: str
   const y = (v: number) => PAD_TOP + innerH * (1 - v / max);
 
   return (
-    <div style={{ overflowX: "auto" }}>
+    <div ref={scroller} style={{ overflowX: "auto" }}>
       <svg
         viewBox={`0 0 ${W} ${H}`}
         style={{ width: "100%", minWidth: 480, display: "block" }}

@@ -20,13 +20,32 @@ Aplicação pessoal de controlo de despesas e orçamentos. Web app instalável n
 
 ## Desenvolvimento
 
-Requisitos: Go 1.23+, Node 20+, e um PostgreSQL acessível (por exemplo via `docker compose up db`).
+Requisitos: Go 1.23+ e Node 20+. Para a base de dados usa uma das opções:
+
+- `make dev-db` — Postgres embebido em `localhost:5433`, sem Docker nem instalação;
+- ou `docker compose up -d db` — Postgres em `localhost:5432` (ajusta `DATABASE_URL`).
 
 ```sh
-make dev-server   # API Go em :8080
-make dev-web      # Next.js em :3000 (proxy de /api para :8080)
-make test         # testes do backend
+make dev-db       # terminal 1: Postgres de desenvolvimento (localhost:5433)
+make dev-server   # terminal 2: API Go em :8080 (migra e faz seed ao arrancar)
+make dev-web      # terminal 3: Next.js em :3000 (proxy de /api para :8080)
+make test         # testes do backend (usam Postgres embebido)
 ```
+
+Abre http://localhost:3000 — no primeiro arranque a app pede-te para criar o acesso.
+
+## Deploy (Dokploy)
+
+O `Dockerfile` produz uma imagem única: o binário Go serve a API e o export
+estático do Next. O `docker-compose.prod.yml` junta a app e o Postgres:
+
+1. No Dokploy cria um serviço **Compose** apontado a este repositório com o
+   ficheiro `docker-compose.prod.yml`;
+2. Define a variável `POSTGRES_PASSWORD` no ambiente do projeto;
+3. Associa o domínio ao serviço `app`, porta `8080` — o Traefik do Dokploy
+   trata do HTTPS (os cookies já vão com `Secure`).
+
+Os dados ficam no volume `pgdata`; faz backup com `pg_dump` regularmente.
 
 Variáveis de ambiente do servidor (ver `.env.example`):
 

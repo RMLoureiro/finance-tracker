@@ -25,7 +25,7 @@ export function parseEuros(input: string): number | null {
   return Math.round(parseFloat(clean) * 100);
 }
 
-/** "2026-08" → "agosto 2026" */
+/** "2026-08" → "Agosto de 2026" */
 export function monthLabel(month: string): string {
   const [y, m] = month.split("-").map(Number);
   const label = new Date(Date.UTC(y, m - 1, 1)).toLocaleDateString("pt-PT", {
@@ -33,7 +33,7 @@ export function monthLabel(month: string): string {
     year: "numeric",
     timeZone: "UTC",
   });
-  return label;
+  return label.charAt(0).toUpperCase() + label.slice(1);
 }
 
 export function currentMonth(): string {

@@ -178,7 +178,7 @@ export default function MovimentosPage() {
         ))}
 
         <button className="btn fab" onClick={() => setSheet({ open: true, expense: null })}>
-          ＋ Despesa
+          + Despesa
         </button>
       </main>
 

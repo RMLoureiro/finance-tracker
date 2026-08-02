@@ -14,7 +14,7 @@ export default function MonthNav({
       <button onClick={() => onChange(addMonths(month, -1))} aria-label="Mês anterior">
         ‹
       </button>
-      <span style={{ textTransform: "capitalize" }}>{monthLabel(month)}</span>
+      <span>{monthLabel(month)}</span>
       <button onClick={() => onChange(addMonths(month, 1))} aria-label="Mês seguinte">
         ›
       </button>

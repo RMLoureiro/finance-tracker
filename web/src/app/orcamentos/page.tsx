@@ -140,7 +140,7 @@ export default function OrcamentosPage() {
                   style={{ padding: 0 }}
                   onClick={() => setSheet({ kind: "recurring", recurring: null })}
                 >
-                  ＋ Adicionar despesa fixa
+                  + Adicionar despesa fixa
                 </button>
               </div>
             </div>
@@ -170,7 +170,7 @@ export default function OrcamentosPage() {
                   style={{ padding: 0 }}
                   onClick={() => setSheet({ kind: "category", category: null })}
                 >
-                  ＋ Nova categoria
+                  + Nova categoria
                 </button>
               </div>
             </div>

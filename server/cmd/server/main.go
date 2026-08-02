@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"net/http"
+	"strings"
 	"time"
 
 	"finance-tracker/server/internal/api"
@@ -34,8 +35,21 @@ func main() {
 	}
 
 	srv := api.New(st, cfg.SecureCookies)
-	log.Printf("API a escutar em :%s", cfg.Port)
-	if err := http.ListenAndServe(":"+cfg.Port, srv.Handler()); err != nil {
+	handler := srv.Handler()
+	if cfg.WebDir != "" {
+		static := api.StaticHandler(cfg.WebDir)
+		apiHandler := handler
+		handler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			if strings.HasPrefix(r.URL.Path, "/api/") {
+				apiHandler.ServeHTTP(w, r)
+				return
+			}
+			static.ServeHTTP(w, r)
+		})
+	}
+
+	log.Printf("a escutar em :%s", cfg.Port)
+	if err := http.ListenAndServe(":"+cfg.Port, handler); err != nil {
 		log.Fatal(err)
 	}
 }
