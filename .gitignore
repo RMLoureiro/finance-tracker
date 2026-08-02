@@ -1,0 +1,24 @@
+# dependências e builds
+node_modules/
+web/.next/
+web/out/
+server/bin/
+dist/
+
+# ambiente
+.env
+.env.local
+*.local.env
+
+# base de dados local
+*.sqlite
+pgdata/
+
+# sistema
+.DS_Store
+Thumbs.db
+
+# testes
+coverage/
+playwright-report/
+test-results/
