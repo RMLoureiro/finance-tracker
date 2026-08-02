@@ -31,8 +31,8 @@ make test         # testes do backend
 Variáveis de ambiente do servidor (ver `.env.example`):
 
 - `DATABASE_URL` — ligação Postgres
-- `SESSION_SECRET` — segredo para assinar sessões
 - `PORT` — porta da API (por omissão 8080)
+- `COOKIE_SECURE=true` — em produção, atrás de HTTPS
 
 ## Estrutura
 

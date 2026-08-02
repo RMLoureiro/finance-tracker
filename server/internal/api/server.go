@@ -41,6 +41,21 @@ func (s *Server) Handler() http.Handler {
 	mux.Handle("POST /api/logout", s.requireAuth(s.handleLogout))
 	mux.Handle("GET /api/me", s.requireAuth(s.handleMe))
 
+	mux.Handle("GET /api/categories", s.requireAuth(s.handleListCategories))
+	mux.Handle("POST /api/categories", s.requireAuth(s.handleCreateCategory))
+	mux.Handle("PUT /api/categories/{id}", s.requireAuth(s.handleUpdateCategory))
+	mux.Handle("DELETE /api/categories/{id}", s.requireAuth(s.handleDeleteCategory))
+
+	mux.Handle("GET /api/budgets", s.requireAuth(s.handleListBudgets))
+	mux.Handle("PUT /api/budgets", s.requireAuth(s.handleSetBudget))
+
+	mux.Handle("GET /api/expenses", s.requireAuth(s.handleListExpenses))
+	mux.Handle("POST /api/expenses", s.requireAuth(s.handleCreateExpense))
+	mux.Handle("PUT /api/expenses/{id}", s.requireAuth(s.handleUpdateExpense))
+	mux.Handle("DELETE /api/expenses/{id}", s.requireAuth(s.handleDeleteExpense))
+
+	mux.Handle("GET /api/months/{month}", s.requireAuth(s.handleMonthSummary))
+
 	return mux
 }
 
